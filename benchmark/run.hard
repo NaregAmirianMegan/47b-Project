@@ -1,0 +1,57 @@
+#!/bin/bash
+
+###########################################
+# Directory containing the test cases
+TEST_CASE_DIRECTORY=benchmark_hard
+
+# Main class of your program
+PROGRAM_MAIN_CLASS=Solver
+###########################################
+
+function test_solvable {
+    CASE_NAME=$1; INPUT_FILE=$2; GOAL_FILE=$3
+	./tester.csh "$CASE_NAME" 1 "$PROGRAM_MAIN_CLASS" "$TEST_CASE_DIRECTORY/$INPUT_FILE" "$TEST_CASE_DIRECTORY/$GOAL_FILE"
+}
+
+echo ""
+echo "******** century (100 moves) and century 1.5 (150 moves) ********"
+echo ""
+test_solvable "test 1" 		"handout.config.2" 	"goal.1.from.handout"
+test_solvable "test 2" 		"century+180" 		"century+180.goal"
+test_solvable "test 3" 		"handout.config.2" 	"century.1.5.goal"
+test_solvable "test 4" 		"century+180" 		"century.1.5+180.goal"
+
+
+echo ""
+echo "******** tests with lots of blocks or space ********"
+echo ""
+test_solvable "test 5" 		"big.tray.4" 		"many.blocks.20.goal"
+test_solvable "test 6" 		"big.tray.4" 		"many.blocks.20+180.goal"
+test_solvable "test 7" 		"big.tray.4" 		"many.blocks.100.goal"
+test_solvable "test 8" 		"big.tray.1" 		"big.tray.1.goal"
+test_solvable "test 9" 		"big.tray.3" 		"big.tray.3.goal"
+
+echo ""
+echo "******** more tests ********"
+echo ""
+test_solvable "test 10 (77? moves)" 		"c22"			"22.goal"
+test_solvable "test 11 (40 moves)" 			"c25"			"15.23-27.30.41.goal"
+test_solvable "test 12 (49 moves)"			"c26"			"15.23-27.30.41.goal"
+test_solvable "test 13 (113 moves)"			"c43-45"		"45.goal"
+test_solvable "test 14 (71? moves)"			"c46"			"46.goal"
+
+echo ""
+echo "******** tests with 6x5 boards ********"
+echo ""
+test_solvable "test 15 (55 moves, 6x5)"		"c53" 			"53.54.64.goal"
+test_solvable "test 16 (44 moves, 6x5)" 	"c54" 			"53.54.64.goal"
+test_solvable "test 17 (48 moves, 6x5)" 	"c55" 			"55.56.goal"
+test_solvable "test 18 (47 moves, 6x5)"		"c64" 			"53.54.64.goal"
+
+echo ""
+echo "******** tests with 6x6 boards ********"
+echo ""
+test_solvable "test 19 (103 moves, 6x6)" 	"c71" 			"71.goal"
+test_solvable "test 20 (needs 103 moves)" 	"pandemonium" 	"pandemonium.goal"
+
+

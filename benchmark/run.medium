@@ -1,0 +1,72 @@
+#!/bin/bash
+
+###########################################
+# Directory containing the test cases
+TEST_CASE_DIRECTORY=benchmark_medium
+
+# Main class of your program
+PROGRAM_MAIN_CLASS=Solver
+###########################################
+
+function test_solvable {
+    CASE_NAME=$1; INPUT_FILE=$2; GOAL_FILE=$3
+	./tester.csh "$CASE_NAME" 1 "$PROGRAM_MAIN_CLASS" "$TEST_CASE_DIRECTORY/$INPUT_FILE" "$TEST_CASE_DIRECTORY/$GOAL_FILE"
+}
+
+echo ""
+echo "******** basic cases ********"
+echo ""
+test_solvable "c15 (63 moves)" "c15" "15.23-27.30.41.goal"
+test_solvable "c16 (40 moves)" "c16" "16.19.20.goal"
+test_solvable "c18 (33 moves)" "c18" "18.21.goal"
+test_solvable "c19 (59 moves)" "c19" "16.19.20.goal"
+test_solvable "c20 (45 moves)" "c20.21" "16.19.20.goal"
+test_solvable "c21 (26 moves)" "c20.21" "18.21.goal"
+test_solvable "c23 (28 moves)" "c23" "15.23-27.30.41.goal"
+test_solvable "c24 (32 moves)" "c24" "15.23-27.30.41.goal"
+test_solvable "c27a (60 moves)" "c27a" "15.23-27.30.41.goal"
+test_solvable "c27b (70 moves)" "c27b" "15.23-27.30.41.goal"
+test_solvable "c27c (78 moves)" "c27c" "15.23-27.30.41.goal"
+test_solvable "c27d (81 moves)" "c27d" "15.23-27.30.41.goal"
+test_solvable "c28 (61 moves)" "c28" "28.goal"
+test_solvable "c29 (54 moves)" "c29" "29.goal"
+test_solvable "c30 (67 moves)" "c15" "15.23-27.30.41.goal"
+test_solvable "c31 (55 moves)" "c31" "31.goal"
+test_solvable "c32 (25 moves)" "c32" "32.goal"
+test_solvable "c33 (20 moves)" "c33" "33.goal"
+test_solvable "c34 (39 moves)" "c34" "34.goal"
+test_solvable "c35 (101 moves)" "c35" "35.goal"
+test_solvable "c36 (28 moves)" "c36" "36.goal"
+test_solvable "c37 (40 moves)" "c37" "37.goal"
+test_solvable "c38 (21 moves)" "c38" "38.goal"
+test_solvable "c39 (53 moves)" "c39" "39.goal"
+test_solvable "c40 (21 moves)" "c40" "40.goal"
+test_solvable "c41 (98 moves)" "c15" "15.23-27.30.41.goal"
+test_solvable "c43 (55 moves)" "c43-45" "43.goal"
+test_solvable "c44 (70 moves)" "c43-45" "44.goal"
+test_solvable "c50 (41 moves, 4x6)" "c50-51" "50.52.goal"
+test_solvable "c51 (71 moves, 4x6)" "c50-51" "51.goal"
+test_solvable "c52 (90 moves, 4x6)" "c52" "50.52.goal"
+test_solvable "c56 (55 moves, 6x5)" "c56" "55.56.goal"
+
+echo ""
+echo "******** dads (min 58 moves) ********"
+echo ""
+test_solvable "regular dads" "dads" "dads.goal"
+test_solvable "dads rotated 90 degrees" "dads+90" "dads+90.goal"
+test_solvable "dads rotated 180 degrees" "dads+180" "dads+180.goal"
+test_solvable "dads rotated 270 degrees" "dads+270" "dads+270.goal"
+
+echo ""
+echo "******** donkey (min 83 moves) ********"
+echo ""
+test_solvable "donkey rotated 90 degrees" "handout.config.1+90" "handout.goal+90"
+test_solvable "donkey rotated 270 degrees" "handout.config.1+270" "handout.goal+270"
+
+echo ""
+echo "******** other ********"
+echo ""
+test_solvable "big tray" "big.tray.4" "big.tray.4.goal"
+test_solvable "blockado (needs 74 moves)" "blockado" "blockado.goal"
+
+

@@ -1,0 +1,90 @@
+#!/bin/bash
+
+###########################################
+# Directory containing the test cases
+TEST_CASE_DIRECTORY=benchmark_easy
+
+# Main class of your program
+PROGRAM_MAIN_CLASS=Solver
+###########################################
+
+function test_solvable {
+    CASE_NAME=$1; INPUT_FILE=$2; GOAL_FILE=$3
+    ./tester.csh "$CASE_NAME" 1 "$PROGRAM_MAIN_CLASS" "$TEST_CASE_DIRECTORY/$INPUT_FILE" "$TEST_CASE_DIRECTORY/$GOAL_FILE"
+}
+
+function test_unsolvable {
+    CASE_NAME=$1; INPUT_FILE=$2; GOAL_FILE=$3
+    ./tester.csh "$CASE_NAME" 0 "$PROGRAM_MAIN_CLASS" "$TEST_CASE_DIRECTORY/$INPUT_FILE" "$TEST_CASE_DIRECTORY/$GOAL_FILE"
+}
+
+echo ""
+echo "******** Start with some solvable puzzles.********"
+echo ""
+
+test_solvable "init.from.handout"   "init.from.handout"     "goal.2.from.handout"
+test_solvable "1x1"                 "1x1"                   "1x1.goal"
+test_solvable "init.from.handout"   "init.from.handout"     "goal.2.from.handout"
+test_solvable "1x1"                 "1x1"                   "1x1.goal"
+test_solvable "1x2, one block"      "1x2.one.block"         "1x2.one.block.goal"
+test_solvable "1x2, two blocks"     "1x2.two.blocks"        "1x2.two.blocks.goal"
+test_solvable "easy"                "easy"                  "easy.goal"
+test_solvable "full.1"              "full.1"                "easy.goal"
+test_solvable "big.block.1"         "big.block.1"           "big.block.1.goal"
+test_solvable "big.block.2"         "big.block.2"           "big.block.2.goal"
+test_solvable "big.block.3"         "big.block.3"           "big.block.3.goal"
+test_solvable "big.block.4"         "big.block.4"           "big.block.4.goal"
+test_solvable "big.tray.2"          "big.tray.2"            "big.tray.2.goal"
+test_solvable "big.search.1"        "big.search.1"          "big.search.1.goal"
+test_solvable "big.search.2"        "big.search.2"          "big.search.2.goal"
+test_solvable "check.diff.blocks"   "check.diff.blocks"     "check.diff.blocks.goal"
+test_solvable "enormous.full.1"     "enormous.full.1"       "enormous.full.goal.1"
+test_solvable "enormous.full.1"     "enormous.full.1"       "enormous.full.goal.2"
+test_solvable "forced.match.1"      "forced.match.1"        "forced.match.1.goal"
+test_solvable "forced.match.1+90"   "forced.match.1+90"     "forced.match.1+90.goal"
+test_solvable "forced.match.2"      "forced.match.2"        "forced.match.2.goal"
+test_solvable "immed.match.0"       "immed.match.0"         "immed.match.0.goal"
+test_solvable "immed.match.1"       "immed.match.1"         "immed.match.1.goal"
+test_solvable "immed.match.2"       "immed.match.2"         "immed.match.2.goal"
+test_solvable "immed.match.2+90"    "immed.match.2+90"      "immed.match.2+90.goal"
+test_solvable "immed.match.2+180"   "immed.match.2+180"     "immed.match.2+180.goal"
+test_solvable "immed.match.2+270"   "immed.match.2+270"     "immed.match.2+270.goal"
+test_solvable "instant.match.0"     "instant.match.0"       "instant.match.0.goal"
+test_solvable "instant.match.1"     "instant.match.1"       "instant.match.1.goal"
+test_solvable "instant.match.1+90"  "instant.match.1+90"    "instant.match.1+90.goal"
+test_solvable "instant.match.2"     "instant.match.2"       "instant.match.2.goal"
+test_solvable "instant.match.3"     "instant.match.3"       "instant.match.3.goal"
+test_solvable "instant.match.3+90"  "instant.match.3+90"    "instant.match.3+90.goal"
+test_solvable "no.move.1"           "no.move.1"             "no.move.1.goal.6"
+test_solvable "no.move.2"           "no.move.2"             "no.move.2.goal.6"
+test_solvable "no.move.3"           "no.move.3"             "no.move.3.goal.6"
+test_solvable "140x140"             "140x140"               "140x140.goal"
+test_solvable "small.search"        "small.search"          "small.search.goal"
+test_solvable "small.search+90"     "small.search+90"       "small.search+90.goal"
+test_solvable "tree+90"             "tree+90"               "tree+90.goal"
+test_solvable "tree+180"            "tree+180"              "tree+180.goal"
+test_solvable "tree+270"            "tree+270"              "tree+270.goal"
+test_solvable "tree"                "tree"                  "tree.goal"
+
+echo ""
+echo "********  Now try some unsolvable puzzles.********"
+echo ""
+
+test_unsolvable "enormous.3"        "enormous.3"            "enormous.deadend.1"
+test_unsolvable "enormous.full.1"   "enormous.full.1"       "enormous.full.deadend.2"
+test_unsolvable "full.2"            "full.2"                "easy.goal" 
+test_unsolvable "impossible.1"      "impossible.1"          "impossible.1.goal"
+test_unsolvable "impossible.1+90"   "impossible.1+90"       "impossible.1+90.goal"
+test_unsolvable "impossible.3"      "impossible.3"          "impossible.3.goal"
+test_unsolvable "impossible.3x4"    "impossible.3x4"        "impossible.3x4.goal.1"
+test_unsolvable "impossible.4"      "impossible.4"          "impossible.4.goal"
+test_unsolvable "impossible.4+90"   "impossible.4+90"       "impossible.4+90.goal"
+test_unsolvable "impossible.4+180"  "impossible.4+180"      "impossible.4+180.goal"
+test_unsolvable "impossible.4+270"  "impossible.4+270"      "impossible.4+270.goal"
+test_unsolvable "impossible.4x3"    "impossible.4x3"        "impossible.4x3.goal.1"
+test_unsolvable "no.move.1"         "no.move.1"             "no.move.1.deadend.goal.6"
+test_unsolvable "no.move.2"         "no.move.2"             "no.move.2.deadend.goal.6"
+test_unsolvable "no.move.3"         "no.move.3"             "no.move.3.deadend.goal.6"
+test_unsolvable "one.move.1"        "one.move.1"            "one.move.1.deadend.goal.6"
+
+
