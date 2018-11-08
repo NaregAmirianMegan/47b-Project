@@ -1,4 +1,2 @@
-Block.class
-Board.class
-Interactive.class
-Move.class
+src/*.class
+benchmark/
