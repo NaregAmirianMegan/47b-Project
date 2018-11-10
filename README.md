@@ -23,7 +23,7 @@ Blocks project for Berkeley 47B
 
 ## **Choose Move:**
 
-*   Choose the move with the lowest heuristic value
+*   Choose the move with the lowest heuristic value (or highest depending on the search algorithm)
 
 ## **Change Game State:**
 
