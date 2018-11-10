@@ -1,14 +1,22 @@
+import java.util.PriorityQueue;
+
 /**
  *
  * @author Nareg A. Megan
  *
  */
-public class Node {
+public class Node implements Comparable<Node>{
 
   private Node parent = null;
   private Board state;
   //A* vals
-  private float gVal, hVal;
+  private double gVal, hVal;
+  private Double fVal;
+
+//TESTING PURPOSES
+  public Node(Double x) {
+    this.fVal = x;
+  }
 
   /**
   * Construct initial root Node
@@ -20,6 +28,7 @@ public class Node {
     this.state = board;
     this.gVal = 0;
     this.hVal = board.getHVal();
+    this.fVal = this.hVal;
   }
 
   /**
@@ -32,11 +41,25 @@ public class Node {
   * @param parent
   *     parent Node
   */
-  public Node(Board board, int gVal, Node parent) {
+  public Node(Board board, double gVal, Node parent) {
     this.state = board;
     this.gVal = gVal;
     this.hVal = board.getHVal();
+    this.fVal = this.gVal + this.hVal;
     this.parent = parent;
+  }
+
+  /**
+  * Allow automatic comparison of nodes with respect to fVal
+  *
+  * @param other
+  *     Node being compared to current node
+  * @return
+  *     int evaluating comparison between objects
+  */
+  //@override
+  public int compareTo(Node other) {
+    return this.fVal.compareTo(other.getFVal());
   }
 
   //Getters and Setters
@@ -67,8 +90,26 @@ public class Node {
   * @return
   *     fVal
   */
-  public float getFVal() {
-    return this.gVal + this.hVal;
+  public Double getFVal() {
+    return this.fVal;
+  }
+
+  public static void main(String[] args) {
+    PriorityQueue<Node> pq = new PriorityQueue<Node>();
+    Node x = new Node(1.5);
+    pq.add(x);
+    Node y = new Node(3.0);
+    pq.add(y);
+    Node z = new Node(5.4);
+    pq.add(z);
+    Node a = new Node(4.2);
+    pq.add(a);
+    Node n = new Node(0.0);
+    pq.add(n);
+    System.out.println(pq.poll().getFVal());
+    System.out.println(pq.poll().getFVal());
+    System.out.println(pq.poll().getFVal());
+    System.out.println(pq.poll().getFVal());
   }
 
 }

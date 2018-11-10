@@ -8,6 +8,8 @@ import java.util.Arrays;
  */
 public class Board {
 
+  public Random random = new Random();
+
   private Block[] blockList;
   private int[][] boardArray;
 
@@ -134,7 +136,7 @@ public class Board {
   * @return
   *     hVal
   */
-  public float getHVal() {
+  public double getHVal() {
     return 0;
   }
 
