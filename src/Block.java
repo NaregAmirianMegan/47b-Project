@@ -78,6 +78,32 @@ public class Block {
     return newBlock;
   }
 
+  /**
+  * Check if two blocks are equal.
+  *
+  * @param other
+  *     other block to check equality with
+  * @return
+  *     true if they are equal; false otherwise
+  */
+  public boolean equals(Block other) {
+    if(this.x == other.getX() && this.y == other.getY() &&
+          this.width == other.getWidth() && this.height == other.getHeight()) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+  * Create string repr of Block object
+  *
+  * @return
+  *     String representation
+  */
+  public String toString() {
+    return "ROW: " + this.y + " COLUMN: " + this.x + " WIDTH: " + this.width + " HEIGHT: " + this.height;
+  }
+
   //TEST FUNCTIONALITY
 
   public static void main(String[] args) {
@@ -95,6 +121,14 @@ public class Block {
     }
     if(block.getHeight() != HEIGHT) {
       System.out.println("Failed: block.getHeight() -> " + block.getHeight() + " != " + HEIGHT);
+    }
+    Block other = new Block(X, Y, WIDTH, HEIGHT);
+    if(!block.equals(other)) {
+      System.out.println("Failed: block.equals(other) -> " + "false");
+    }
+    other = new Block(X+1, Y, WIDTH, HEIGHT+1);
+    if(block.equals(other)) {
+      System.out.println("Failed: block.equals(other) -> " + "true");
     }
     System.out.println("-----------------------");
     System.out.println("Tests Finished.");

@@ -8,8 +8,6 @@ import java.util.Arrays;
  */
 public class Board {
 
-  public Random random = new Random();
-
   private Block[] blockList;
   private int[][] boardArray;
 
