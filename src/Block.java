@@ -1,3 +1,5 @@
+import java.util.*;
+
 /**
  *
  * @author Nareg A. Megan
@@ -95,6 +97,16 @@ public class Block {
   }
 
   /**
+  * generate unique hash code for a block
+  *
+  * @return
+  *     hash code
+  */
+  public int hashCode() {
+    return Objects.hash((Integer) this.x, (Integer) this.y, (Integer) this.width, (Integer) this.height);
+  }
+
+  /**
   * Create string repr of Block object
   *
   * @return
@@ -130,6 +142,16 @@ public class Block {
     if(block.equals(other)) {
       System.out.println("Failed: block.equals(other) -> " + "true");
     }
+    System.out.println("TEST HASHCODE FUNCTIONALITY");
+    System.out.println("-----------------------");
+    Block b1 = new Block(0, 0, 2, 2);
+    Block b2 = new Block(0, 0, 2, 2);
+    int h1 = b1.hashCode();
+    int h2 = b2.hashCode();
+    System.out.println(h1 + " == " + h2);
+    b2 = new Block(1, 1, 2, 2);
+    h2 = b2.hashCode();
+    System.out.println(h1 + " != " + h2);
     System.out.println("-----------------------");
     System.out.println("Tests Finished.");
   }

@@ -134,7 +134,7 @@ public class Board {
   * @return
   *     hVal
   */
-  public double getHVal() {
+  public double getHVal(Block[] goalBlockList) {
     return 0;
   }
 
@@ -174,7 +174,7 @@ public class Board {
       int shift = 0;
       while(!blocked) {
         for(int i = block.getY();i < block.getY()+block.getHeight();i++) {
-          if(block.getX()+block.getWidth()+shift >= this.boardArray.length ||
+          if(block.getX()+block.getWidth()+shift >= this.boardArray[0].length ||
               this.boardArray[i][block.getX()+block.getWidth()+shift] != 0) {
             blocked = true;
           }
@@ -202,7 +202,7 @@ public class Board {
       shift = 0;
       while(!blocked) {
         for(int i = block.getX();i < block.getX()+block.getWidth();i++) {
-          if(block.getY()+block.getHeight()+shift >= this.boardArray[0].length ||
+          if(block.getY()+block.getHeight()+shift >= this.boardArray.length ||
               this.boardArray[block.getY()+block.getHeight()+shift][i] != 0) {
             blocked = true;
           }
@@ -236,19 +236,45 @@ public class Board {
   * @return
   *     true if they are equal; false otherwise
   */
-  public boolean equals(Board board) {
-    boolean okay = true;
-    for(int i = 0;i < this.boardArray.length;i++) {
-      for(int j = 0; j < this.boardArray[0].length;j++) {
-        if(this.boardArray[i][j] != board.getBoardArray()[i][j]) {
-          okay = false;
-        }
-        if(!okay) {
-          break;
+  @Override
+  public boolean equals(Object block) {
+    Board other = (Board) block;
+    Block[] otherBlockList = other.getBlockList();
+    for(int i = 0;i < otherBlockList.length;i++) {
+      boolean okay = false;
+      for(int j = 0;j < this.blockList.length;j++) {
+        if(otherBlockList[i].getWidth() == this.blockList[j].getWidth()
+              && otherBlockList[i].getHeight() == this.blockList[j].getHeight()) {
+          if(otherBlockList[i].getX() == this.blockList[j].getX()
+                && otherBlockList[i].getY() == this.blockList[j].getY()) {
+              okay = true;
+              break;
+          }
         }
       }
+      if(!okay) {
+        return false;
+      }
     }
-    return okay;
+    return true;
+  }
+
+  /**
+  * generate unique hashCode for board state
+  *
+  * @return
+  *     hashCode
+  */
+  @Override
+  public int hashCode() {
+    //create hash out of hashCode of each block
+    int[] blockHashes = new int[this.blockList.length];
+    for(int i = 0;i < blockHashes.length;i++) {
+      blockHashes[i] = this.blockList[i].hashCode();
+    }
+    //int code = Arrays.hashCode(blockHashes);
+    //System.out.println(code);
+    return Arrays.hashCode(blockHashes);
   }
 
   /**
@@ -274,7 +300,7 @@ public class Board {
   public static void main(String[] args) {
     //Test construction, getters, setters
     final int boardWidth = 5, boardHeight = 5;
-    final Block[] blockList = new Block[4];
+    final Block[] blockList = new Block[5];
 
     Block block1 = new Block(0, 0, 2, 2);
     blockList[0] = block1;
@@ -284,13 +310,38 @@ public class Board {
     blockList[2] = block3;
     Block block4 = new Block(0, 4, 2, 1);
     blockList[3] = block4;
+    Block block5 = new Block(4, 0, 1, 1);
+    blockList[4] = block5;
 
     Board board = new Board(blockList, boardWidth, boardHeight);
 
-    //Test 2D representation
+    Block block1c = new Block(0, 0, 2, 2);
+    blockList[0] = block1c;
+    Block block2c = new Block(4, 0, 1, 1);
+    blockList[1] = block2c;
+    Block block3c = new Block(2, 2, 2, 2);
+    blockList[2] = block3c;
+    Block block4c = new Block(0, 4, 2, 1);
+    blockList[3] = block4c;
+    Block block5c = new Block(4, 4, 1, 1);
+    blockList[4] = block5c;
+
+    Board boardCopy = new Board(blockList, boardWidth, boardHeight);
+    //boardCopy = new Board(boardCopy, new Move(true, 2, 1));
 
     System.out.println(board.toString());
-    System.out.println("=========================");
+    System.out.println(boardCopy.toString());
+
+    System.out.println(board.hashCode());
+    System.out.println(boardCopy.hashCode());
+
+    //Test 2D representation
+
+    // System.out.println(board.toString());
+    // System.out.println("=========================");
+
+
+
     //
     // Board board2 = new Board(board, new Move(true, 1, 1));
     //
@@ -301,15 +352,15 @@ public class Board {
     // System.out.println(move.toString());
     // System.out.println((new Board(board, move)).toString());
 
-    ArrayList<Move> moves = board.genPossibleMoves();
-    for(Move move : moves) {
-      System.out.println(move.toString());
-      System.out.println("-----------------------");
-      System.out.println(board.toString());
-      System.out.println("+++++++++++++++++++++++");
-      Board newBoard = new Board(board, move);
-      System.out.println(newBoard.toString());
-    }
+    // ArrayList<Move> moves = board.genPossibleMoves();
+    // for(Move move : moves) {
+    //   System.out.println(move.toString());
+    //   System.out.println("-----------------------");
+    //   System.out.println(board.toString());
+    //   System.out.println("+++++++++++++++++++++++");
+    //   Board newBoard = new Board(board, move);
+    //   System.out.println(newBoard.toString());
+    // }
 
   //   System.out.println("-----------------------");
   //   System.out.println("Tests Finished.");
