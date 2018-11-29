@@ -44,11 +44,10 @@ public class Solver {
     if(args[0].substring(0, 2).equals("-o")) {
       System.out.println("Debug");
     } else {
-      double strt = System.currentTimeMillis();
       String start = args[0];
       String goal = args[1];
-      File startFile = new File("../benchmark/benchmark_hard/" + start);
-      File goalFile = new File("../benchmark/benchmark_hard/" + goal);
+      File startFile = new File("../benchmark/benchmark_medium/" + start);
+      File goalFile = new File("../benchmark/benchmark_medium/" + goal);
       BufferedReader startConfig = new BufferedReader(new FileReader(startFile));
       BufferedReader goalConfig = new BufferedReader(new FileReader(goalFile));
       String[] dims = startConfig.readLine().split(" ");
@@ -85,7 +84,7 @@ public class Solver {
         ///////////////////////////////////////////////////////////
         //A*                        A*                       A*////
         ///////////////////////////////////////////////////////////
-        //TODO: consider setting higher inital DS sizes
+        double strt = System.currentTimeMillis();
         PriorityQueue<Node> openList = new PriorityQueue<Node>();
         HashMap<Board, Double> openListTracker = new HashMap<Board, Double>();
         HashMap<Board, Double> closedList = new HashMap<Board, Double>();

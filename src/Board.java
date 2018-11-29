@@ -126,10 +126,10 @@ public class Board {
     return newBlockList;
   }
 
-  //TODO: implement
   /**
-  * Get heuristical value using A* algorithm. Which estimates
-  * distance to goal node from current node using _________
+  * Get heuristical value for A* algorithm; estimates
+  * distance to goal node from current node by estimating the
+  * number of moves to the solution.
   *
   * @return
   *     hVal
