@@ -6,7 +6,7 @@ import java.io.*;
  * @author Nareg A. Megan
  *
  */
-public class Solver {
+public class SolverTest {
 
   public static boolean goalReached(Node node, Block[] goalBlockList) {
     Block[] currBlocks = node.getState().getBlockList();
@@ -60,8 +60,8 @@ public class Solver {
     } else {
       String start = args[0];
       String goal = args[1];
-      File startFile = new File(start);
-      File goalFile = new File(goal);
+      File startFile = new File("../benchmark/benchmark_medium/" + start);
+      File goalFile = new File("../benchmark/benchmark_medium/" + goal);
       BufferedReader startConfig = new BufferedReader(new FileReader(startFile));
       BufferedReader goalConfig = new BufferedReader(new FileReader(goalFile));
       String[] dims = startConfig.readLine().split(" ");
@@ -80,7 +80,7 @@ public class Solver {
      }
        Block[] blocks = linkedBlocks.toArray(new Block[length]);
        Board startingBoard = new Board(blocks, Integer.parseInt(dims[1]), Integer.parseInt(dims[0]));
-       System.out.println(startingBoard.toString());
+      // System.out.println(startingBoard.toString());
        Node rootNode = new Node(startingBoard);
 
        linkedBlocks = new LinkedList<Block>();
@@ -110,10 +110,11 @@ public class Solver {
           closedList.put(currNode.getState(), currNode.getFVal());
           if(goalReached(currNode, goalBlockList)) {
             double end = System.currentTimeMillis();
-            System.out.println("Goal Reached!!!");
-            System.out.println("Solution Time: " + ((end - strt)/1000.0) + "s.");
+          //  System.out.println("Goal Reached!!!");
+          //  System.out.println("Solution Time: " + ((end - strt)/1000.0) + "s.");
             printMovesTo(currNode);
-            System.out.println(currNode.toString());
+          //  System.out.println("============================");
+          //  System.out.println(currNode.toString());
             return;
           }
           for(Node child : currNode.generateChildren()) {

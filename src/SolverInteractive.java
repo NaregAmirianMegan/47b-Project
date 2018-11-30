@@ -6,7 +6,7 @@ import java.io.*;
  * @author Nareg A. Megan
  *
  */
-public class Solver {
+public class SolverInteractive {
 
   public static boolean goalReached(Node node, Block[] goalBlockList) {
     Block[] currBlocks = node.getState().getBlockList();
@@ -30,24 +30,10 @@ public class Solver {
   }
 
   public static void printMovesTo(Node node) {
-    Stack<Node> path = new Stack<Node>();
-    Node currNode = node;
-    while(currNode != null) {
-      path.push(currNode);
-      currNode = currNode.getParent();
-    }
-    Node prevNode = path.pop();
-    while(!path.empty()) {
-      currNode = path.pop();
-      int blockNum = currNode.getMoveToThis().getBlockNum();
-      Block prevBlock = prevNode.getState().getBlockList()[blockNum-1];
-      Block newBlock = currNode.getState().getBlockList()[blockNum-1];
-      int iRow = prevBlock.getY();
-      int iColumn = prevBlock.getX();
-      int fRow = newBlock.getY();
-      int fColumn = newBlock.getX();
-      System.out.println(iRow + " " + iColumn + " " + fRow + " " + fColumn);
-      prevNode = currNode;
+    Move currMove = null;
+    while((currMove = node.getMoveToThis()) != null) {
+      System.out.println(currMove.toString());
+      node = node.getParent();
     }
   }
 
@@ -60,8 +46,8 @@ public class Solver {
     } else {
       String start = args[0];
       String goal = args[1];
-      File startFile = new File(start);
-      File goalFile = new File(goal);
+      File startFile = new File("../benchmark/benchmark_easy/" + start);
+      File goalFile = new File("../benchmark/benchmark_easy/" + goal);
       BufferedReader startConfig = new BufferedReader(new FileReader(startFile));
       BufferedReader goalConfig = new BufferedReader(new FileReader(goalFile));
       String[] dims = startConfig.readLine().split(" ");
@@ -132,6 +118,7 @@ public class Solver {
             openListTracker.put(child.getState(), child.getFVal());
           }
         }
+
       }
   }
 

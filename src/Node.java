@@ -11,7 +11,7 @@ public class Node implements Comparable<Node>{
   private Board state;
   private double gVal, hVal;
   private Double fVal;
-  private Move moveToThis;
+  private Move moveToThis = null;
 
   /**
   * Construct initial root Node
@@ -22,7 +22,6 @@ public class Node implements Comparable<Node>{
   public Node(Board board) {
     this.state = board;
     this.gVal = 0;
-    this.moveToThis = null;
   }
 
   /**
