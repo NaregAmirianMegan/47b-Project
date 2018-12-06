@@ -22,6 +22,8 @@ public class Node implements Comparable<Node>{
   public Node(Board board) {
     this.state = board;
     this.gVal = 0;
+    this.hVal = 0;
+    this.fVal = 0.0;
   }
 
   /**
@@ -174,6 +176,12 @@ public class Node implements Comparable<Node>{
     Node copyNode = new Node(board);
     copyNode.calcFVal(goalBlockList);
 
+    System.out.println(rootNode.toString());
+    System.out.println("===================");
+    for(Node child : children) {
+      System.out.println(child.toString());
+    }
+
     //System.out.println(copyNode.toString());
     //
     //
@@ -188,20 +196,20 @@ public class Node implements Comparable<Node>{
     // System.out.println(pq.contains(copyNode));
 
 
-    HashMap<Board, Double> map = new HashMap<Board, Double>();
-    map.put(rootNode.getState(), rootNode.getFVal());
-    System.out.println(rootNode.toString());
-    for(Node child : children) {
-      child.calcFVal(goalBlockList);
-      map.put(child.getState(), child.getFVal());
-      System.out.println(child.getState().toString());
-    }
-
-    //map.put(copyNode.getState(), copyNode.getFVal());
-
-    //System.out.println(map.get(children.get(0).getState()));
-
-    System.out.println(map.containsKey(copyNode.getState()));
+    // HashMap<Board, Double> map = new HashMap<Board, Double>();
+    // map.put(rootNode.getState(), rootNode.getFVal());
+    // System.out.println(rootNode.toString());
+    // for(Node child : children) {
+    //   child.calcFVal(goalBlockList);
+    //   map.put(child.getState(), child.getFVal());
+    //   System.out.println(child.getState().toString());
+    // }
+    //
+    // //map.put(copyNode.getState(), copyNode.getFVal());
+    //
+    // //System.out.println(map.get(children.get(0).getState()));
+    //
+    // System.out.println(map.containsKey(copyNode.getState()));
 
     // Node x = new Node(board);
     // pq.add(x);

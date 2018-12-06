@@ -126,6 +126,77 @@ public class Board {
     return newBlockList;
   }
 
+  private int moveCalculator(Block block, Block goalBlock) {
+    int xDis = block.getX() - goalBlock.getX();
+    int yDis = block.getY() - goalBlock.getY();
+    if(xDis != 0 && yDis != 0) {
+      int columnCount = 0;
+      int ghostColumnCount = 0;
+      int rowCount = 0;
+      int ghostRowCount = 0;
+      for(Block b : this.blockList) {
+        if(b != block) {
+          if((b.getX() >= block.getX() && b.getX()+b.getWidth()-1 <= goalBlock.getX()+goalBlock.getWidth()-1) ||
+              (b.getX() >= goalBlock.getX() && b.getX()+b.getWidth()-1 <= block.getX()+block.getWidth()-1)) {
+                if(!(b.getY()+b.getHeight()-1 < block.getY() || b.getY() > block.getY()+block.getHeight()-1)) {
+                  columnCount++;
+                }
+                if(!(b.getY()+b.getHeight()-1 < goalBlock.getY() || b.getY() > goalBlock.getY()+goalBlock.getHeight()-1)) {
+                  ghostColumnCount++;
+                }
+            }
+          if((b.getY() >= block.getY() && b.getY()+b.getHeight()-1 <= goalBlock.getY()+goalBlock.getHeight()-1) ||
+              (b.getY() >= goalBlock.getY() && b.getY()+b.getHeight()-1 <= block.getY()+block.getHeight()-1)) {
+                if(!(b.getX()+b.getWidth()-1 < block.getX() || b.getX() > block.getX()+block.getWidth()-1)) {
+                  rowCount++;
+                }
+                if(!(b.getX()+b.getWidth()-1 < goalBlock.getX() || b.getX() > goalBlock.getX()+goalBlock.getWidth()-1)) {
+                  ghostRowCount++;
+                }
+            }
+        }
+      }
+      // System.out.println(columnCount);
+      // System.out.println(ghostColumnCount);
+      // System.out.println(rowCount);
+      // System.out.println(ghostRowCount);
+      int totalCount1 = columnCount + ghostRowCount;
+      int totalCount2 = rowCount + ghostColumnCount;
+      // System.out.println(totalCount1);
+      // System.out.println(totalCount2);
+      if(totalCount1 < totalCount2) {
+        return 2 + totalCount2;
+      }
+      return 2 + totalCount1;
+    } else if(xDis != 0) {
+      int columnCount = 0;
+      for(Block b : this.blockList) {
+        if(b != block) {
+          if((b.getX() > goalBlock.getX() && b.getX() < block.getX()) ||
+              (b.getX() < goalBlock.getX() && b.getX() > block.getX())) {
+                if(!(b.getY()+b.getHeight() < block.getY() || b.getY() > block.getY()+block.getHeight())) {
+                  columnCount++;
+                }
+            }
+          }
+      }
+      return 1 + columnCount;
+    } else {
+      int rowCount = 0;
+      for(Block b : this.blockList) {
+        if(b != block) {
+          if((b.getY() > goalBlock.getY() && b.getY() < block.getY()) ||
+              (b.getY() < goalBlock.getY() && b.getY() > block.getY())) {
+                if(!(b.getX()+b.getWidth() < block.getX() || b.getX() > block.getX()+block.getWidth())) {
+                  rowCount++;
+                }
+            }
+        }
+      }
+      return 1 + rowCount;
+    }
+  }
+
   /**
   * Get heuristical value for A* algorithm; estimates
   * distance to goal node from current node by estimating the
@@ -135,7 +206,30 @@ public class Board {
   *     hVal
   */
   public double getHVal(Block[] goalBlockList) {
-    return 0;
+    ArrayList<Block> usedBlocks = new ArrayList<Block>();
+    int moves = 0;
+    int distance;
+    int minDistance;
+    Block curr = null;
+    for(Block goalBlock : goalBlockList) {
+      minDistance = 0;
+      for(Block potBlock : this.blockList) {
+        if(goalBlock.equalsDims(potBlock) && !potBlock.getUsed()) {
+          distance = this.moveCalculator(potBlock, goalBlock);
+          if(minDistance == 0 || distance < minDistance) {
+            minDistance = distance;
+            curr = potBlock;
+          }
+        }
+      }
+      curr.setUsed(true);
+      usedBlocks.add(curr);
+      moves += minDistance;
+    }
+    for(Block block : usedBlocks) {
+      block.setUsed(false);
+    }
+    return moves;
   }
 
   //Getters
@@ -159,6 +253,101 @@ public class Board {
   public int[][] getBoardArray() {
     return this.boardArray;
   }
+
+  // public ArrayList<Move> genPossibleMoves() {
+  //   ArrayList<Move> moveList = new ArrayList<Move>();
+  //   int spaceLeft;
+  //   int spaceRight;
+  //   int spaceUp;
+  //   int spaceDown;
+  //   int leftMargin;
+  //   int rightMargin;
+  //   int upMargin;
+  //   int downMargin;
+  //   boolean leftClear;
+  //   boolean rightClear;
+  //   boolean upClear;
+  //   boolean downClear;
+  //   for(int i = 0;i < this.blockList.length;i++) {
+  //     Block currBlock = this.blockList[i];
+  //     spaceLeft = Integer.MAX_VALUE;
+  //     spaceRight = Integer.MAX_VALUE;
+  //     spaceUp = Integer.MAX_VALUE;
+  //     spaceDown = Integer.MAX_VALUE;
+  //     leftClear = true;
+  //     rightClear = true;
+  //     upClear = true;
+  //     downClear = true;
+  //     for(int j = 0;j < this.blockList.length;j++) {
+  //       Block block = this.blockList[j];
+  //       if(currBlock == block) {
+  //         continue;
+  //       }
+  //       if(block.getX()+block.getWidth()-1 < currBlock.getX()) {
+  //         if(!(block.getY()+block.getHeight()-1 < currBlock.getY() || block.getY() > currBlock.getY()+currBlock.getHeight()-1)) {
+  //           leftMargin = currBlock.getX()-(block.getX()+block.getWidth());
+  //           leftClear = false;
+  //           if(leftMargin < spaceLeft) {
+  //             spaceLeft = leftMargin;
+  //           }
+  //         }
+  //       } else if(block.getX() > currBlock.getX()+currBlock.getWidth()-1) {
+  //         if(!(block.getY()+block.getHeight()-1 < currBlock.getY() || block.getY() > currBlock.getY()+currBlock.getHeight()-1)) {
+  //           rightMargin = block.getX()-(currBlock.getX()+currBlock.getWidth());
+  //           rightClear = false;
+  //           if(rightMargin < spaceRight) {
+  //             spaceRight = rightMargin;
+  //           }
+  //         }
+  //       }
+  //       if(block.getY()+block.getHeight()-1 < currBlock.getY()) {
+  //         if(!(block.getX()+block.getWidth()-1 < currBlock.getX() || block.getX() > currBlock.getX()+currBlock.getWidth()-1)) {
+  //           upMargin = currBlock.getY()-(block.getY()+block.getHeight());
+  //           upClear = false;
+  //           if(upMargin < spaceUp) {
+  //             spaceUp = upMargin;
+  //           }
+  //         }
+  //       } else if(block.getY() > currBlock.getY()+currBlock.getHeight()-1) {
+  //         if(!(block.getX()+block.getWidth()-1 < currBlock.getX() || block.getX() > currBlock.getX()+currBlock.getWidth()-1)) {
+  //           downMargin = block.getY()-(currBlock.getY()+currBlock.getHeight());
+  //           downClear = false;
+  //           if(downMargin < spaceDown) {
+  //             spaceDown = downMargin;
+  //           }
+  //         }
+  //       }
+  //     }
+  //     if(leftClear) {
+  //       spaceLeft = currBlock.getX();
+  //     }
+  //     if(rightClear) {
+  //       spaceRight = this.boardArray[0].length-(currBlock.getX()+currBlock.getWidth());
+  //     }
+  //     if(upClear) {
+  //       spaceUp = currBlock.getY();
+  //     }
+  //     if(downClear) {
+  //       spaceDown = this.boardArray.length-(currBlock.getY()+currBlock.getHeight());
+  //     }
+  //     int max = Math.max(Math.max(spaceLeft, spaceRight), Math.max(spaceUp, spaceDown));
+  //     for(int s = max;s > 0;s--) {
+  //       if(spaceLeft >= s) {
+  //         moveList.add(new Move(true, -s, i+1));
+  //       }
+  //       if(spaceRight >= s) {
+  //         moveList.add(new Move(true, s, i+1));
+  //       }
+  //       if(spaceUp >= s) {
+  //         moveList.add(new Move(false, -s, i+1));
+  //       }
+  //       if(spaceDown >= s) {
+  //         moveList.add(new Move(false, s, i+1));
+  //       }
+  //     }
+  //   }
+  //   return moveList;
+  // }
 
   /**
     * Generate all possible moves from board state.
@@ -230,51 +419,61 @@ public class Board {
     return moveList;
   }
 
-  /**
-  * Check if this board is equal to that board.
-  *
-  * @return
-  *     true if they are equal; false otherwise
-  */
+  // /**
+  // * Check if this board is equal to that board.
+  // *
+  // * @return
+  // *     true if they are equal; false otherwise
+  // */
+  // @Override
+  // public boolean equals(Object board) {
+  //   Board other = (Board) board;
+  //   Block[] otherBlockList = other.getBlockList();
+  //   for(int i = 0;i < otherBlockList.length;i++) {
+  //     boolean okay = false;
+  //     for(int j = 0;j < this.blockList.length;j++) {
+  //       if(otherBlockList[i].getWidth() == this.blockList[j].getWidth()
+  //             && otherBlockList[i].getHeight() == this.blockList[j].getHeight()) {
+  //         if(otherBlockList[i].getX() == this.blockList[j].getX()
+  //               && otherBlockList[i].getY() == this.blockList[j].getY()) {
+  //             okay = true;
+  //             break;
+  //         }
+  //       }
+  //     }
+  //     if(!okay) {
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
+
   @Override
-  public boolean equals(Object block) {
-    Board other = (Board) block;
-    Block[] otherBlockList = other.getBlockList();
-    for(int i = 0;i < otherBlockList.length;i++) {
-      boolean okay = false;
-      for(int j = 0;j < this.blockList.length;j++) {
-        if(otherBlockList[i].getWidth() == this.blockList[j].getWidth()
-              && otherBlockList[i].getHeight() == this.blockList[j].getHeight()) {
-          if(otherBlockList[i].getX() == this.blockList[j].getX()
-                && otherBlockList[i].getY() == this.blockList[j].getY()) {
-              okay = true;
-              break;
-          }
+  public boolean equals(Object board) {
+    Board other = (Board) board;
+    for(int i = 0;i < this.boardArray.length;i++) {
+      for(int j = 0;j < this.boardArray[0].length;j++) {
+        if((this.boardArray[i][j] != 0 && other.getBoardArray()[i][j] == 0) ||
+            (this.boardArray[i][j] == 0 && other.getBoardArray()[i][j] != 0)) {
+          return false;
         }
-      }
-      if(!okay) {
-        return false;
       }
     }
     return true;
   }
 
-  /**
-  * generate unique hashCode for board state
-  *
-  * @return
-  *     hashCode
-  */
+  private static int code(int[] list) {
+    return Arrays.hashCode(list);
+  }
+
   @Override
   public int hashCode() {
-    //create hash out of hashCode of each block
-    int[] blockHashes = new int[this.blockList.length];
-    for(int i = 0;i < blockHashes.length;i++) {
-      blockHashes[i] = this.blockList[i].hashCode();
-    }
-    //int code = Arrays.hashCode(blockHashes);
-    //System.out.println(code);
-    return Arrays.hashCode(blockHashes);
+    // int[] list = new int[this.blockList.length];
+    // for(int i = 0;i < list.length;i++) {
+    //   list[i] = this.blockList[i].hashCode();
+    // }
+    // return this.code(list);
+    return Arrays.deepHashCode(this.boardArray);
   }
 
   /**
@@ -299,41 +498,74 @@ public class Board {
 
   public static void main(String[] args) {
     //Test construction, getters, setters
-    final int boardWidth = 5, boardHeight = 5;
-    final Block[] blockList = new Block[5];
+    final int boardWidth = 4, boardHeight = 6;
+    final Block[] blockList = new Block[11];
+    //x, y, width height
 
-    Block block1 = new Block(0, 0, 2, 2);
+    Block block1 = new Block(0, 1, 2, 2);
     blockList[0] = block1;
-    Block block2 = new Block(4, 4, 1, 1);
+    Block block2 = new Block(2, 0, 2, 1);
     blockList[1] = block2;
-    Block block3 = new Block(2, 2, 2, 2);
+    Block block3 = new Block(2, 1, 2, 1);
     blockList[2] = block3;
-    Block block4 = new Block(0, 4, 2, 1);
+    Block block4 = new Block(2, 2, 2, 1);
     blockList[3] = block4;
-    Block block5 = new Block(4, 0, 1, 1);
+    Block block5 = new Block(0, 3, 1, 2);
     blockList[4] = block5;
+    Block block6 = new Block(1, 3, 1, 2);
+    blockList[5] = block6;
+    Block block7 = new Block(2, 3, 2, 1);
+    blockList[6] = block7;
+    Block block8 = new Block(2, 4, 2, 1);
+    blockList[7] = block8;
+    Block block9 = new Block(0, 5, 1, 1);
+    blockList[8] = block9;
+    Block block10 = new Block(1, 5, 1, 1);
+    blockList[9] = block10;
+    Block block11 = new Block(2, 5, 2, 1);
+    blockList[10] = block11;
+
+    // Block gBlock1 = new Block(0, 4, 2, 2);
+    // //Block gBlock2 = new Block(3, 4, 1, 1);
+    // Block[] goalBlocks = new Block[1];
+    // goalBlocks[0] = gBlock1;
+    //goalBlocks[1] = gBlock2;
 
     Board board = new Board(blockList, boardWidth, boardHeight);
 
-    Block block1c = new Block(0, 0, 2, 2);
-    blockList[0] = block1c;
-    Block block2c = new Block(4, 0, 1, 1);
-    blockList[1] = block2c;
-    Block block3c = new Block(2, 2, 2, 2);
-    blockList[2] = block3c;
-    Block block4c = new Block(0, 4, 2, 1);
-    blockList[3] = block4c;
-    Block block5c = new Block(4, 4, 1, 1);
-    blockList[4] = block5c;
+    System.out.println(board.toString());
 
-    Board boardCopy = new Board(blockList, boardWidth, boardHeight);
+    ArrayList<Move> moves = board.genPossibleMoves();
+    for(Move move : moves) {
+      System.out.println(move.toString());
+      System.out.println("-----------------------");
+      Board newBoard = new Board(board, move);
+      System.out.println(newBoard.toString());
+    }
+//    System.out.println(board.toString());
+
+  //  System.out.println(board.getHVal(goalBlocks));
+
+    //
+    // Block block1c = new Block(0, 0, 2, 2);
+    // blockList[0] = block1c;
+    // Block block2c = new Block(4, 0, 1, 1);
+    // blockList[1] = block2c;
+    // Block block3c = new Block(2, 2, 2, 2);
+    // blockList[2] = block3c;
+    // Block block4c = new Block(0, 4, 2, 1);
+    // blockList[3] = block4c;
+    // Block block5c = new Block(4, 4, 1, 1);
+    // blockList[4] = block5c;
+    //
+    // Board boardCopy = new Board(blockList, boardWidth, boardHeight);
     //boardCopy = new Board(boardCopy, new Move(true, 2, 1));
 
-    System.out.println(board.toString());
-    System.out.println(boardCopy.toString());
-
-    System.out.println(board.hashCode());
-    System.out.println(boardCopy.hashCode());
+    // System.out.println(board.toString());
+    // System.out.println(boardCopy.toString());
+    //
+    // System.out.println(board.hashCode());
+    // System.out.println(boardCopy.hashCode());
 
     //Test 2D representation
 
@@ -352,7 +584,7 @@ public class Board {
     // System.out.println(move.toString());
     // System.out.println((new Board(board, move)).toString());
 
-    // ArrayList<Move> moves = board.genPossibleMoves();
+    // ArrayList<Move> moves = board.genPossibleMovesSingleSpace();
     // for(Move move : moves) {
     //   System.out.println(move.toString());
     //   System.out.println("-----------------------");

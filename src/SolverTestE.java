@@ -6,23 +6,17 @@ import java.io.*;
  * @author Nareg A. Megan
  *
  */
-public class SolverTest {
+public class SolverTestE {
 
-  public static boolean goalReached(Node node, Block[] goalBlockList) {
-    Block[] currBlocks = node.getState().getBlockList();
-    for(int i = 0;i < goalBlockList.length;i++) {
-      boolean okay = false;
-      for(int j = 0;j < currBlocks.length;j++) {
-        if(goalBlockList[i].getWidth() == currBlocks[j].getWidth()
-              && goalBlockList[i].getHeight() == currBlocks[j].getHeight()) {
-          if(goalBlockList[i].getX() == currBlocks[j].getX()
-                && goalBlockList[i].getY() == currBlocks[j].getY()) {
-              okay = true;
-              break;
-          }
-        }
-      }
-      if(!okay) {
+  public static boolean goalReached(NodeE node, HashMap<Pair, Pair> goalBlockMap) {
+    HashMap<Pair, Pair> blockMap = node.getState().getBlockMap();
+    for(Map.Entry<Pair, Pair> entry : goalBlockMap.entrySet()) {
+      Pair goalLoc = entry.getKey();
+      Pair goalDims = entry.getValue();
+      Pair currDimsAtLoc = blockMap.get(goalLoc);
+      if(goalDims.equals(currDimsAtLoc)) {
+        continue;
+      } else {
         return false;
       }
     }
@@ -65,81 +59,63 @@ public class SolverTest {
       BufferedReader startConfig = new BufferedReader(new FileReader(startFile));
       BufferedReader goalConfig = new BufferedReader(new FileReader(goalFile));
       String[] dims = startConfig.readLine().split(" ");
-      //System.out.println("Rows: " + dims[0] + " Columns: " + dims[1]);
-      String blockRepr;
-      LinkedList<Block> linkedBlocks = new LinkedList<Block>();
-      int length = 0;
-      while((blockRepr = startConfig.readLine()) != null) {
-        String[] info = blockRepr.split(" ");
+      ArrayList<String> startConfigLines = new ArrayList<String>();
+      String line;
+      while((line = startConfig.readLine()) != null) {
+        startConfigLines.add(line);
+      }
+
+      Pair[][] blockRepr = new Pair[startConfigLines.size()][2];
+      for(int i = 0;i < startConfigLines.size();i++) {
+        String[] info = startConfigLines.get(i).split(" ");
         int x = Integer.parseInt(info[3]);
         int y = Integer.parseInt(info[2]);
         int width = Integer.parseInt(info[1]);
         int height = Integer.parseInt(info[0]);
-        linkedBlocks.add(new Block(x, y, width, height));
-        length++;
-     }
-       Block[] blocks = linkedBlocks.toArray(new Block[length]);
-       Board startingBoard = new Board(blocks, Integer.parseInt(dims[1]), Integer.parseInt(dims[0]));
-       System.out.println(startingBoard.toString());
-       Node rootNode = new Node(startingBoard);
+        blockRepr[i][0] = new Pair(x, y);
+        blockRepr[i][1] = new Pair(width, height);
+      }
 
-       linkedBlocks = new LinkedList<Block>();
-       length = 0;
-       while((blockRepr = goalConfig.readLine()) != null) {
-         String[] info = blockRepr.split(" ");
-         int x = Integer.parseInt(info[3]);
-         int y = Integer.parseInt(info[2]);
-         int width = Integer.parseInt(info[1]);
-         int height = Integer.parseInt(info[0]);
-         linkedBlocks.add(new Block(x, y, width, height));
-         length++;
-        }
-        Block[] goalBlockList = linkedBlocks.toArray(new Block[length]);
+       BoardE startingBoard = new BoardE(blockRepr, Integer.parseInt(dims[1]), Integer.parseInt(dims[0]));
+       System.out.println(startingBoard.toString());
+       NodeE rootNode = new NodeE(startingBoard);
+
+       HashMap<Pair, Pair> goalBlockMap = new HashMap<Pair, Pair>();
+       while((line = goalConfig.readLine()) != null) {
+         String[] info = line.split(" ");
+         int Xi = Integer.parseInt(info[3]);
+         int Yi = Integer.parseInt(info[2]);
+         int Xf = Integer.parseInt(info[1]);
+         int Yf = Integer.parseInt(info[0]);
+         goalBlockMap.put(new Pair(Xi, Yi), new Pair(Xf, Yf));
+       }
         ///////////////////////////////////////////////////////////
         //A*                        A*                       A*////
         ///////////////////////////////////////////////////////////
-
+        double strt = System.currentTimeMillis();
         double totalTimeMoves = 0;
         double totalTimeGoal = 0;
         double totalTimeCheckClosed = 0;
         double totalTimeCheckOpen = 0;
         double totalTimeCheckFVal = 0;
         double totalTimeRemoveFromOpenList = 0;
-        double totalTimeCalcFVal = 0;
-        double totalPollTime = 0;
-        double totalOpenListTrackerRemovalTime = 0;
-        double totalTimeClosedListPut = 0;
 
-        PriorityQueue<Node> openList = new PriorityQueue<Node>(100000);
-        HashMap<Board, Double> openListTracker = new HashMap<Board, Double>(1000000);
-        HashMap<Board, Double> closedList = new HashMap<Board, Double>(1000000);
+        PriorityQueue<NodeE> openList = new PriorityQueue<NodeE>();
+        HashMap<BoardE, Double> openListTracker = new HashMap<BoardE, Double>();
+        HashMap<BoardE, Double> closedList = new HashMap<BoardE, Double>();
 
         openList.add(rootNode);
         openListTracker.put(rootNode.getState(), rootNode.getFVal());
 
-        double s;
-        double d;
-
-        double strt = System.currentTimeMillis();
         while(!openList.isEmpty()) {
-          s = System.currentTimeMillis();
-          Node currNode = openList.poll();
-          d = System.currentTimeMillis();
-          totalPollTime += ((d - s)/1000.0);
-
-          s = System.currentTimeMillis();
+          NodeE currNode = openList.poll();
           openListTracker.remove(currNode.getState());
-          d = System.currentTimeMillis();
-          totalOpenListTrackerRemovalTime += ((d - s)/1000.0);
-
-          s = System.currentTimeMillis();
+          currNode.calcFVal(goalBlockMap);
           closedList.put(currNode.getState(), currNode.getFVal());
-          d = System.currentTimeMillis();
-          totalTimeClosedListPut += ((d - s)/1000.0);
 
-          s = System.currentTimeMillis();
-          boolean done = goalReached(currNode, goalBlockList);
-          d = System.currentTimeMillis();
+          double s = System.currentTimeMillis();
+          boolean done = goalReached(currNode, goalBlockMap);
+          double d = System.currentTimeMillis();
           totalTimeGoal += ((d - s)/1000.0);
 
           if(done) {
@@ -152,28 +128,21 @@ public class SolverTest {
             System.out.println("Check Open List Time: " + totalTimeCheckOpen);
             System.out.println("Check fVal Time: " + totalTimeCheckFVal);
             System.out.println("Open List Removal Time: " + totalTimeRemoveFromOpenList);
-            System.out.println("Calc FVal Time: " + totalTimeCalcFVal);
-            System.out.println("Poll Time: " + totalPollTime);
-            System.out.println("Open List Tracker Removal time: " + totalOpenListTrackerRemovalTime);
-            System.out.println("Closed List Put Time: " + totalTimeClosedListPut);
             System.out.println("Closed List Size: " + closedList.size());
             System.out.println("Open List Size: " + openList.size());
             System.out.println("Open List Tracker Size: " + openListTracker.size());
-            double totalTime = totalTimeMoves+totalTimeGoal+totalTimeCheckClosed+totalTimeCheckOpen+totalTimeCheckFVal+totalTimeRemoveFromOpenList
-                                +totalTimeCalcFVal+totalPollTime+totalOpenListTrackerRemovalTime+totalTimeClosedListPut;
-            System.out.println("Total Time: " + totalTime);
-            printMovesTo(currNode);
+            //printMovesTo(currNode);
             System.out.println("============================");
             System.out.println(currNode.toString());
             return;
           }
 
           s = System.currentTimeMillis();
-          ArrayList<Node> children = currNode.generateChildren();
+          ArrayList<NodeE> children = currNode.generateChildren();
           d = System.currentTimeMillis();
           totalTimeMoves += ((d - s)/1000.0);
 
-          for(Node child : children) {
+          for(NodeE child : children) {
 
             s = System.currentTimeMillis();
             boolean inClosed = closedList.containsKey(child.getState());
@@ -183,10 +152,7 @@ public class SolverTest {
             if(inClosed) {
               continue;
             }
-            s = System.currentTimeMillis();
-            child.calcFVal(goalBlockList);
-            d = System.currentTimeMillis();
-            totalTimeCalcFVal += ((d - s)/1000.0);
+            child.calcFVal(goalBlockMap);
 
             s = System.currentTimeMillis();
             boolean inOpen = openListTracker.containsKey(child.getState());
@@ -204,7 +170,7 @@ public class SolverTest {
                 continue;
               }
               s = System.currentTimeMillis();
-            //  openList.remove(child);
+              openList.remove(child);
               d = System.currentTimeMillis();
               totalTimeRemoveFromOpenList += ((d - s)/1000.0);
             }

@@ -8,6 +8,7 @@ import java.util.*;
 public class Block {
 
   private int x, y, width, height;
+  private boolean used = false;
 
   /**
   * Construct Block object
@@ -28,6 +29,14 @@ public class Block {
   }
 
   //Getters and Setters
+
+  public boolean getUsed() {
+    return this.used;
+  }
+
+  public void setUsed(boolean bool) {
+    this.used = bool;
+  }
 
   /**
   * Get x-coordinate
@@ -69,6 +78,10 @@ public class Block {
     return this.height;
   }
 
+  public boolean equalsDims(Block other) {
+    return (this.width == other.getWidth() && this.height == other.getHeight());
+  }
+
   /**
   * Return a copied Block object.
   *
@@ -96,6 +109,12 @@ public class Block {
     return false;
   }
 
+  private static int cantorSquared(int x, int y, int a, int b) {
+    int c1 = ((x + y + 1)*(x + y))/2 + y;
+    int c2 = ((a + b + 1)*(a + b))/2 + b;
+    return ((c1 + c2 + 1)*(c1 + c2))/2 + c1;
+  }
+
   /**
   * generate unique hash code for a block
   *
@@ -103,7 +122,7 @@ public class Block {
   *     hash code
   */
   public int hashCode() {
-    return Objects.hash((Integer) this.x, (Integer) this.y, (Integer) this.width, (Integer) this.height);
+    return Objects.hash(this.x, this.y, this.width, this.height);
   }
 
   /**
