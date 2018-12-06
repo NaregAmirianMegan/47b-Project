@@ -10,6 +10,7 @@ public class Board {
 
   private Block[] blockList;
   private int[][] boardArray;
+  private int code;
 
   /**
   * Construct Board representation from blockList and board width and height.
@@ -33,6 +34,7 @@ public class Board {
         }
       }
     }
+    this.code = Arrays.deepHashCode(this.boardArray);
   }
 
   /**
@@ -96,6 +98,7 @@ public class Board {
         }
       }
     }
+    this.code = Arrays.deepHashCode(this.boardArray);
   }
 
 
@@ -218,6 +221,9 @@ public class Board {
   *     hVal
   */
   public double getHVal(Block[] goalBlockList) {
+    if(this.blockList.length > 100) {
+      return 0;
+    }
     ArrayList<Block> usedBlocks = new ArrayList<Block>();
     int moves = 0;
     int distance;
@@ -485,7 +491,7 @@ public class Board {
     //   list[i] = this.blockList[i].hashCode();
     // }
     // return this.code(list);
-    return Arrays.deepHashCode(this.boardArray);
+    return this.code;
   }
 
   /**

@@ -60,8 +60,8 @@ public class SolverTest {
     } else {
       String start = args[0];
       String goal = args[1];
-      File startFile = new File("../benchmark/benchmark_medium/" + start);
-      File goalFile = new File("../benchmark/benchmark_medium/" + goal);
+      File startFile = new File("../benchmark/benchmark_hard/" + start);
+      File goalFile = new File("../benchmark/benchmark_hard/" + goal);
       BufferedReader startConfig = new BufferedReader(new FileReader(startFile));
       BufferedReader goalConfig = new BufferedReader(new FileReader(goalFile));
       String[] dims = startConfig.readLine().split(" ");
