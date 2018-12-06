@@ -53,7 +53,7 @@ public class Board {
     int blockNumber = move.getBlockNum();
     int spaces = move.getSpaces();
     this.boardArray = board.deepCopyBoardArray();
-    this.blockList = board.deepCopyBlockList();
+    this.blockList = board.copyBlockList(blockNumber);
     Block block = board.getBlockList()[blockNumber-1];
     if(column) {
       this.blockList[blockNumber-1] = new Block(board.getBlockList()[blockNumber-1].getX()+spaces,
@@ -96,6 +96,18 @@ public class Board {
         }
       }
     }
+  }
+
+
+  private Block[] copyBlockList(int blockNumber) {
+    Block[] newBlockList = new Block[this.blockList.length];
+    for(int i = 0;i < this.blockList.length;i++) {
+      if(i == blockNumber-1) {
+        newBlockList[i] = this.blockList[i].copy();
+      }
+      newBlockList[i] = this.blockList[i];
+    }
+    return newBlockList;
   }
 
   /**
