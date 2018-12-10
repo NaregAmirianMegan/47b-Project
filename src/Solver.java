@@ -80,7 +80,7 @@ public class Solver {
      }
        Block[] blocks = linkedBlocks.toArray(new Block[length]);
        Board startingBoard = new Board(blocks, Integer.parseInt(dims[1]), Integer.parseInt(dims[0]));
-       System.out.println(startingBoard.toString());
+       //System.out.println(startingBoard.toString());
        Node rootNode = new Node(startingBoard);
 
        linkedBlocks = new LinkedList<Block>();
@@ -98,26 +98,24 @@ public class Solver {
         ///////////////////////////////////////////////////////////
         //A*                        A*                       A*////
         ///////////////////////////////////////////////////////////
-        double strt = System.currentTimeMillis();
+
         PriorityQueue<Node> openList = new PriorityQueue<Node>();
         HashMap<Board, Double> openListTracker = new HashMap<Board, Double>();
         HashMap<Board, Double> closedList = new HashMap<Board, Double>();
+
         openList.add(rootNode);
         openListTracker.put(rootNode.getState(), rootNode.getFVal());
+        
         while(!openList.isEmpty()) {
           Node currNode = openList.poll();
-          currNode.calcFVal(goalBlockList);
+          openListTracker.remove(currNode.getState());
           closedList.put(currNode.getState(), currNode.getFVal());
           if(goalReached(currNode, goalBlockList)) {
-            double end = System.currentTimeMillis();
-            System.out.println("Goal Reached!!!");
-            System.out.println("Solution Time: " + ((end - strt)/1000.0) + "s.");
             printMovesTo(currNode);
-            System.out.println(currNode.toString());
             return;
           }
           for(Node child : currNode.generateChildren()) {
-            if(closedList.get(child.getState()) != null) {
+            if(closedList.containsKey(child.getState())) {
               continue;
             }
             child.calcFVal(goalBlockList);
@@ -125,13 +123,12 @@ public class Solver {
               if(openListTracker.get(child.getState()) <= child.getFVal()) { //if that node has a lower f then skip this node
                 continue;
               }
-              openList.remove(child);
             }
             openList.add(child);
-            //gVal automatically replaced
-            openListTracker.put(child.getState(), child.getFVal());
+            openListTracker.put(child.getState(), child.getFVal()); //fVal automatically replaced
           }
         }
+        System.exit(1);
       }
   }
 

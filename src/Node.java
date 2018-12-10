@@ -149,38 +149,38 @@ public class Node implements Comparable<Node>{
   }
 
   public static void main(String[] args) {
-    PriorityQueue<Node> pq = new PriorityQueue<Node>();
-
-    final int boardWidth = 5, boardHeight = 5;
-    final Block[] blockList = new Block[5];
-
-    Block block1 = new Block(0, 0, 2, 2);
-    blockList[0] = block1;
-    Block block2 = new Block(4, 4, 1, 1);
-    blockList[1] = block2;
-    Block block3 = new Block(2, 2, 2, 2);
-    blockList[2] = block3;
-    Block block4 = new Block(0, 4, 2, 1);
-    blockList[3] = block4;
-    Block block5 = new Block(4, 0, 1, 1);
-    blockList[4] = block5;
-
-    Board board = new Board(blockList, boardWidth, boardHeight);
-
-    Block[] goalBlockList = {new Block(0, 0, 1, 1)};
-
-    Node rootNode = new Node(board);
-    rootNode.calcFVal(goalBlockList);
-    ArrayList<Node> children = rootNode.generateChildren();
-
-    Node copyNode = new Node(board);
-    copyNode.calcFVal(goalBlockList);
-
-    System.out.println(rootNode.toString());
-    System.out.println("===================");
-    for(Node child : children) {
-      System.out.println(child.toString());
-    }
+    // PriorityQueue<Node> pq = new PriorityQueue<Node>();
+    //
+    // final int boardWidth = 5, boardHeight = 5;
+    // final Block[] blockList = new Block[5];
+    //
+    // Block block1 = new Block(0, 0, 2, 2);
+    // blockList[0] = block1;
+    // Block block2 = new Block(4, 4, 1, 1);
+    // blockList[1] = block2;
+    // Block block3 = new Block(2, 2, 2, 2);
+    // blockList[2] = block3;
+    // Block block4 = new Block(0, 4, 2, 1);
+    // blockList[3] = block4;
+    // Block block5 = new Block(4, 0, 1, 1);
+    // blockList[4] = block5;
+    //
+    // Board board = new Board(blockList, boardWidth, boardHeight);
+    //
+    // Block[] goalBlockList = {new Block(0, 0, 1, 1)};
+    //
+    // Node rootNode = new Node(board);
+    // rootNode.calcFVal(goalBlockList);
+    // ArrayList<Node> children = rootNode.generateChildren();
+    //
+    // Node copyNode = new Node(board);
+    // copyNode.calcFVal(goalBlockList);
+    //
+    // System.out.println(rootNode.toString());
+    // System.out.println("===================");
+    // for(Node child : children) {
+    //   System.out.println(child.toString());
+    // }
 
     //System.out.println(copyNode.toString());
     //

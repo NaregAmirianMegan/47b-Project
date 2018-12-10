@@ -250,6 +250,34 @@ public class Board {
     return moves;
   }
 
+  // public double getHVal(Block[] goalBlockList, int freeSpace) {
+  //   ArrayList<Block> usedBlocks = new ArrayList<Block>();
+  //   int value = 0;
+  //   for(Block goal : goalBlockList) {
+  //     for(Block block : this.blockList) {
+  //       if(goal.equalsDims(block) && !block.getUsed()) {
+  //         int xM = 0;
+  //         int yM = 0;
+  //         int xR = block.getWidth();
+  //         int yR = block.getHeight();
+  //         if(goal.getX()-block.getX() != 0) {
+  //           xM = 1;
+  //         }
+  //         if(goal.getY()-block.getY() != 0) {
+  //           yM = 1;
+  //         }
+  //         value += 2*((xM*xR)/freeSpace) + 2*((yM*yR)/freeSpace) + xM + yM;
+  //         block.setUsed(true);
+  //         usedBlocks.add(block);
+  //       }
+  //     }
+  //   }
+  //   for(Block b : usedBlocks) {
+  //     b.setUsed(false);
+  //   }
+  //   return value;
+  // }
+
   //Getters
 
   /**
