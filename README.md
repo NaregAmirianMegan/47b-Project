@@ -37,3 +37,17 @@ Blocks project for Berkeley 47B
 *   Certain graph search algorithms like A* use a queue to remember previously visited nodes to  
     prevent infinite cycling; however, for larger sample cases a depth first search would be better if you  
     are remembering previous states (to conserve space complexity).
+
+## **Algorithmic Improvements:**
+
+*  I updated the hashing function so that it was only computed once and used the 2d array to compute the hash,
+   making it far more efficient than before.
+*  I implemented a block copy method that only copies the block that is changed. All other blocks in the list
+   are kept as the same references as the previous node.
+*  Lastly I implemented a new heuristic that, given a reasonable amount of blocks, calculates the number of moves it will
+   take each block to reach its goal state by counting the number of blocks in its way both column-wise and row-wise.
+   This allows the A* algorithm to make smarter decisions as to how it should proceed in searching the game graph.
+
+## **Passed Hard Benchmarks:**
+
+*  Tests 1 through 4; Tests 8, 9; Test 13; Tests 15-17.
