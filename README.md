@@ -40,7 +40,7 @@ Blocks project for Berkeley 47B
 
 ## **Algorithmic Improvements:**
 
-*  I updated the hashing function so that it was only computed once and used the 2d array to compute the hash,
+*  I updated the hashing function so that it is only computed once and used the 2d array to compute the hash,
    making it far more efficient than before.
 *  I implemented a block copy method that only copies the block that is changed. All other blocks in the list
    are kept as the same references as the previous node.
